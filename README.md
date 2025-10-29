@@ -1,5 +1,5 @@
-# ReactBC
-ReactBC is a React template to be integrated in Business Central as a ControlAddIn.
+# TypescriptBC
+TypescriptBC is a typescript template to be integrated in Business Central as a ControlAddIn.
 The bundled build result is the javascript source that can be used by BC.
 
 ## How to use the template
@@ -23,27 +23,27 @@ The template supports making functions public to be callable from the BC Control
     ```
 4. In the ControlAddIn of your BC Project, define the Function *(Note that first letter is capital)*:
     ```c#
-    controladdin "PTE ReactBC"
+    controladdin "PTE TypescriptBC"
     {
-        Scripts = './addins/react-bc.bundle.js';
+        Scripts = './addins/typescript-bc.bundle.js';
 
         procedure SomeGlobalFunction();
     }
     ```
 5. Call the procedure like you would normally do using the ControlAddIn
 
-## How to call an AL Event from React
+## How to call an AL Event from Typescript
 The template supports calling Events that are defined in the ControlAddIn file in the BC Project. For this you need to follow these steps:
 1. Add the event you want to the ControlAddIn in your BC Project:
     ```c#
-    controladdin "PTE ReactBC"
+    controladdin "PTE TypescriptBC"
     {
-        Scripts = './addins/react-bc.bundle.js';
+        Scripts = './addins/typescript-bc.bundle.js';
 
         event OnControlReady(Message: Text; CurrDateTime: Text);
     }
     ```
-2. Invoke the event in the React Project:
+2. Invoke the event in the Typescript Project:
     ```javascript
     const datetime = new Date(Date.now());
     ALHelper.invokeEvent('OnControlReady', 'Control Ready Event. Time: ', datetime.toLocaleTimeString());
@@ -51,4 +51,4 @@ The template supports calling Events that are defined in the ControlAddIn file i
     // or skipping event if BC Environment is busy (operation is running)
     ALHelper.invokeEventSkipBusy('OnControlReady', 'Control Ready Event. Time: ', datetime.toLocaleTimeString());
     ```
-    *Note that the First parameter of the `invokeEvent` function is the name of the Event in your BC Project. All other parameters are the variables you want to call the event in BC with. If you have your data in form of an array just use the spread operator `invokeEvent('name', ...yourarray)`*
+    *Note that the First parameter of the `invokeEvent` function is the name of the Event in your BC Project. All other parameters are the variables you want to call the event in BC with `invokeEvent('name', param1, param2)`. If you have your data in form of an array just use the spread operator `invokeEvent('name', ...yourarray)`*
