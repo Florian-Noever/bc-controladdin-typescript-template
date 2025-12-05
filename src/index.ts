@@ -1,18 +1,17 @@
-import ALHelper from './utils/alHelper';
-
-CreateRootWhenLoaded('controlAddIn');
+import ALHelper from '@floriannoever/bc-controladdin-helper';
 
 /**
  * Creates a React root when the specified HTML element is loaded.
  * @param elementId - The ID of the HTML element where the React root will be created.
  */
-async function CreateRootWhenLoaded(elementId: string): Promise<void> {
-    const root = await waitForElementToExistId(elementId);
-    root.setAttribute('tbc-loaded', 'true');
+export async function mount(elementId: string): Promise<void> {
+    const root = await waitForElementToExistId(elementId, 5000);
+    root.setAttribute('rbc-loaded', 'true');
 
     // Example. Remove for Production
     exampleFunction();
 }
+
 
 // Example. Remove for Production
 function exampleFunction(): void {
@@ -34,16 +33,29 @@ function someGlobalFunction(): void {
  * @param elementId - The ID of the HTML element to wait for.
  * @returns A promise that resolves with the HTMLElement when it exists.
  */
-function waitForElementToExistId(elementId: string): Promise<HTMLElement> {
-    return new Promise((resolve) => {
+function waitForElementToExistId(elementId: string, timeoutMs?: number): Promise<HTMLElement> {
+    return new Promise((resolve, reject) => {
+        const pollInterval = 50;
+        let timeoutId: number | undefined;
+
         function checkElement(): void {
             const element = document.getElementById(elementId);
-            if (element == null) {
-                setTimeout(checkElement, 50);
+            if (!element) {
+                window.setTimeout(checkElement, pollInterval);
             } else {
+                if (timeoutId) {
+                    window.clearTimeout(timeoutId);
+                }
                 resolve(element);
             }
         }
+
+        if (timeoutMs) {
+            timeoutId = window.setTimeout(() => reject(new Error(`Element with id "${elementId}" did not appear within ${timeoutMs}ms`)), timeoutMs);
+        }
+
         checkElement();
     });
 }
+
+mount('controlAddIn');

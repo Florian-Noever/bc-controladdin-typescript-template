@@ -3,13 +3,19 @@ import { fileURLToPath } from 'node:url';
 import pkg from './package.json' with { type: 'json' };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const __libname = pkg.name.replace(/-/g, '_');
 
 export default {
+    target: 'web',
     entry: './src/index.ts',
 
     output: {
         path: resolve(__dirname, 'dist'),
         filename: `${pkg.name}.bundle.js`,
+        library: {
+            name: __libname,
+            type: 'window',
+        },
         clean: true,
     },
 
@@ -18,7 +24,6 @@ export default {
             {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
-                // use: { loader: 'ts-loader', options: { transpileOnly: true } },
                 use: [
                     {
                         loader: "babel-loader",
@@ -38,12 +43,17 @@ export default {
             { test: /\.html$/, use: ['html-loader'] },
         ],
     },
+    
     resolve: {
         extensions: ['.ts', '.js'],
     },
+
     performance: {
         hints: false,
-        maxAssetSize: 400000,
-        maxEntrypointSize: 400000,
+    },
+
+    optimization: {
+        splitChunks: false,
+        runtimeChunk: false,
     },
 };
