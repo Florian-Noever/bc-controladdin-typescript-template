@@ -1,5 +1,5 @@
-# TypescriptBC
-TypescriptBC is a typescript template to be integrated in Business Central as a ControlAddIn.
+# BC ControlAddIn Typescript Template
+This is a typescript template to be integrated in Business Central as a ControlAddIn.
 The bundled build result is the javascript source that can be used by BC.
 
 ## How to use the template
